@@ -101,6 +101,7 @@ router.post ('/sign-in', async function(req, res, next) {
 // HOMESREEN //
 router.post('/homescreen', async function (req, res, next) {
   var result = false;
+  var resultvoyage = false;
   var user = await userModel.findOne({
     token: req.body.token
   })
@@ -108,7 +109,20 @@ router.post('/homescreen', async function (req, res, next) {
   if(user){
     result = true
   }
-  res.json({username: user.username, result})
+// trouver les voyages de l'utilisateur //
+  var voyages = await voyagesModel.find({
+    userId: [user._id]
+  })
+
+  if(voyages){
+    resultvoyage = true;
+  }
+  res.json({username: user.username, resultvoyage, tripName: voyages.tripName})
+})
+
+router.post('/newtrip', async function (req, res, next) {
+  var resultnewTrip = false;
+  var newTrip = new vo
 })
 
 
