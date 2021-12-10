@@ -118,7 +118,7 @@ router.post('/home', async function (req, res, next) {
   if(voyages){
     resultvoyage = true;
   } 
-  res.json({username: user.username, result: result, resultvoyage: resultvoyage, tripName: voyages.tripName})
+  res.json({username: user.username, result: result, resultvoyage: resultvoyage, voyages : voyages})
 })
 // ROUTE NEWTRIP //
 router.post('/newtrip', async function (req, res, next) {
