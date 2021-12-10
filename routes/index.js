@@ -4,7 +4,8 @@ var router = express.Router();
 var bcrypt = require('bcrypt');
 var uid2 = require('uid2');
 
-var userModel = require('../models/users')
+var userModel = require('../models/users');
+const voyageModel = require('../models/voyages');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -119,12 +120,35 @@ router.post('/homescreen', async function (req, res, next) {
   } */
   res.json({username: user.username, result: result})
 })
-
-/* router.post('/newtrip', async function (req, res, next) {
+// ROUTE NEWTRIP //
+router.post('/newtrip', async function (req, res, next) {
   var resultnewTrip = false;
-  var newTrip = new vo
+  var resultUser = false;
+
+  var user = await userModel.findOne({
+    token: req.body.token
+  })
+
+  if (user){
+    resultUser = true
+  }
+
+  var newTrip = new voyageModel({
+    tripName: req.body.tripNamefromFront,
+    dateDepart: req.body.dateDepartFromFront,
+    dateRetour: req.body.dateRetourFromFront,
+    voyageurs: [{organisateur: user._id, adultes: req.body.adultesFromFront, enfants: req.body.enfantsFromFront}]
+
+  })
+  var tripSaved = await newTrip.save();
+
+  if(tripSaved){
+    resultnewTrip = true
+  }
+
+  res.json({resultnewTrip: resultnewTrip, resultUser: resultUser})
 })
- */
+ 
 
 
 module.exports = router;
