@@ -69,6 +69,7 @@ router.post ('/sign-in', async function(req, res, next) {
   var result = false
   var user = null
   var error = []
+  var token = null
   
   if(req.body.emailFromFront == ''
   || req.body.passwordFromFront == ''
@@ -93,11 +94,11 @@ router.post ('/sign-in', async function(req, res, next) {
     }
   
   }
-  res.json({result, user, error})
+  res.json({result, user, token, error})
 })
 
 
-
+// HOMESREEN
 
 
 
