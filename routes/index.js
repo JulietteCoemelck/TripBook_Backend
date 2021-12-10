@@ -111,13 +111,13 @@ router.post('/homescreen', async function (req, res, next) {
     result = true
   }
 // trouver les voyages de l'utilisateur //
-  /* var voyages = await voyagesModel.find({
-    userId: [user._id]
+  var voyages = await voyageModel.find({
+    organisateurs: [user._id]
   })
 
   if(voyages){
     resultvoyage = true;
-  } */
+  } 
   res.json({username: user.username, result: result})
 })
 // ROUTE NEWTRIP //
@@ -137,7 +137,8 @@ router.post('/newtrip', async function (req, res, next) {
     tripName: req.body.tripNamefromFront,
     dateDepart: req.body.dateDepartFromFront,
     dateRetour: req.body.dateRetourFromFront,
-    voyageurs: [{organisateur: user._id, adultes: req.body.adultesFromFront, enfants: req.body.enfantsFromFront}]
+    voyageurs: [{organisateur: user._id, adultes: req.body.adultesFromFront, enfants: req.body.enfantsFromFront}],
+    organisateurs: [user._id]
 
   })
   var tripSaved = await newTrip.save();

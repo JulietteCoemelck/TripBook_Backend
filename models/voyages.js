@@ -38,7 +38,7 @@ var voyageSchema = mongoose.Schema({
     villeArrivee : String,
     dateDepart : String,
     dateRetour : String,
-    voyageurs : [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
+    organisateurs : [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
     etapes: [etapesSchema],
     activies: [activitySchema],
     checklist : [checklistSchema],
