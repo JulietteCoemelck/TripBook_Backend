@@ -78,7 +78,7 @@ router.post ('/sign-in', async function(req, res, next) {
   }
 
   if(error.length == 0){
-    const user = await userModel.findOne({
+     user = await userModel.findOne({
       email: req.body.emailFromFront,
     })
 
@@ -98,7 +98,18 @@ router.post ('/sign-in', async function(req, res, next) {
 })
 
 
-// HOMESREEN
+// HOMESREEN //
+router.post('/homescreen', async function (req, res, next) {
+  var result = false;
+  var user = await userModel.findOne({
+    token: req.body.token
+  })
+
+  if(user){
+    result = true
+  }
+  res.json({username: user.username, result})
+})
 
 
 
