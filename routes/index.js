@@ -98,7 +98,7 @@ router.post ('/sign-in', async function(req, res, next) {
 })
 
 
-// HOMESREEN //
+// ROUTE HOMESREEN //
 router.post('/homescreen', async function (req, res, next) {
   var result = false;
   var resultvoyage = false;
@@ -110,21 +110,21 @@ router.post('/homescreen', async function (req, res, next) {
     result = true
   }
 // trouver les voyages de l'utilisateur //
-  var voyages = await voyagesModel.find({
+  /* var voyages = await voyagesModel.find({
     userId: [user._id]
   })
 
   if(voyages){
     resultvoyage = true;
-  }
-  res.json({username: user.username, resultvoyage, tripName: voyages.tripName})
+  } */
+  res.json({username: user.username, result: result})
 })
 
-router.post('/newtrip', async function (req, res, next) {
+/* router.post('/newtrip', async function (req, res, next) {
   var resultnewTrip = false;
   var newTrip = new vo
 })
-
+ */
 
 
 module.exports = router;
