@@ -181,10 +181,10 @@ router.post('/addetape', async function (req, res, next) {
     _id: req.body.voyageId
   })
 
-trip.etapes.push({ville: req.body.villeEtapeFromFront, duree: req.body.dureeFromFront})
-var tripSaved = await trip.save(); 
+// trip.etapes.push({ville: req.body.villeEtapeFromFront, duree: req.body.dureeFromFront})
+// var tripSaved = await trip.save(); 
 
-  res.json({tripEtapes : tripSaved.etapes})
+  res.json({tripEtapes : tripSaved.etapes, trip: trip})
 })
 
 
