@@ -167,9 +167,14 @@ router.post('/deletetrip', async function (req, res, next) {
 
 // ROUTE ITINERARY //
 router.post('/itinerary', async function (req, res, next) {
-  var trip = await voyageModel.findOne({
+  var trip = await voyageModel.findOneAndUpdate({
     _id: req.body.voyageId
+  }, {
+    villeDepart: req.body.villeDepartFromFront,
+    villeRetour: req.body.villeRetourFromFront
   })
+
+
   res.json({trip})
 })
 
