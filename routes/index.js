@@ -187,5 +187,16 @@ var tripSaved = await trip.save();
   res.json({tripEtapes: tripSaved.etapes})
 })
 
+// ROUTE DELETE ETAPE //
+router.post('/deleteetape', async function (req,res,next) {
+  var trip = await voyageModel.update({
+    _id: req.body.voyageId
+  }, {
+    $pull: {etapes: {_id: req.body.etapeIDFromFront}}
+  })
+
+  res.json({trip : trip})
+})
+
 
 module.exports = router;
