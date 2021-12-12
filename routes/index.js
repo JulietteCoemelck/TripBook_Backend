@@ -120,6 +120,8 @@ router.post('/home', async function (req, res, next) {
   } 
   res.json({username: user.username, result: result, resultvoyage: resultvoyage, voyages : voyages})
 })
+
+
 // ROUTE NEWTRIP //
 router.post('/newtrip', async function (req, res, next) {
   var resultnewTrip = false;
@@ -149,7 +151,18 @@ router.post('/newtrip', async function (req, res, next) {
 
   res.json({resultnewTrip: resultnewTrip, resultUser: resultUser})
 })
- 
+
+
+//  ROUTE DELETE TRIP  //
+router.post('/deletetrip', async function (req, res, next) {
+  var resultDeleteTrip = false;
+
+  var trip = await voyageModel.deleteOne({
+    _id: req.body.idTripFromFront
+  })
+
+  res.json({resultDeleteTrip: resultDeleteTrip, trip: trip})
+})
 
 
 module.exports = router;
