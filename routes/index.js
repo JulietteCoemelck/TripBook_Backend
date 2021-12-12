@@ -181,11 +181,7 @@ router.post('/addetape', async function (req, res, next) {
     _id: req.body.voyageId
   })
 
-  await voyageModel.updateOne({
-    _id: trip._id
-  }, {
-    $push: {etapes: {ville:req.body.villeEtapeFromFront, duree: req.body.dureeFromFront}}
-  })
+trip.etapes.push({ville: req.body.villeEtapeFromFront, duree: req.body.dureeFromFront})
 
   res.json({tripEtapes : trip.etapes})
 })
