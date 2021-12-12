@@ -167,15 +167,27 @@ router.post('/deletetrip', async function (req, res, next) {
 
 // ROUTE ITINERARY //
 router.post('/itinerary', async function (req, res, next) {
-  var trip = await voyageModel.findOneAndUpdate({
+  var trip = await voyageModel.findOne({
     _id: req.body.voyageId
-  }, {
-    villeDepart: req.body.villeDepartFromFront,
-    villeRetour: req.body.villeRetourFromFront
   })
 
 
   res.json({trip})
+})
+
+// ROUTE ADD ETAPES //
+router.post('/addetape', async function (req, res, next) {
+  var trip = voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+
+  await voyageModel.updateOne({
+    _id: trip._id
+  }, {
+    $push: {etapes: {ville:req.body.villeEtapeFromFront, duree: req.body.dureeFromFront}}
+  })
+
+  res.json({tripEtapes : trip.etapes})
 })
 
 
