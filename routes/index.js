@@ -189,14 +189,13 @@ var tripSaved = await trip.save();
 
 // ROUTE DELETE ETAPE //
 router.post('/deleteetape', async function (req,res,next) {
-  var trip = await voyageModel.findOne({
+  var trip = await voyageModel.update({
     _id: req.body.voyageID
+  },{
+    $pull: {etapes: {_id: req.body.etapeIDFromFront}}
   })
 
-  trip.etapes.pull({_id: req.body.etapeIDFromFront})
-  var tripSaved = await trip.save();
-
-  res.json({tripSaved : tripSaved})
+  res.json({trip : trip})
 })
 
 
