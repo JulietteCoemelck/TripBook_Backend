@@ -180,6 +180,34 @@ router.post('/itinerary', async function (req, res, next) {
   res.json({trip})
 })
 
+// ROUTE ADD VILLE DEPART //
+router.post('/addvilledepart', async function (req, res, next) {
+  var trip = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+  var tripUpdate = await voyageModel.update({
+    _id: trip._id
+  }, {
+    villeDepart: req.body.villeDepartFromFront
+  })
+
+  res.json(tripUpdate.villeDepart)
+})
+
+// ROUTE ADD VILLE RETOUR //
+router.post('/addvilleretour', async function (req, res, next) {
+  var trip = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+  var tripUpdate = await voyageModel.update({
+    _id: trip._id
+  }, {
+    villeRetour: req.body.villeRetourFromFront
+  })
+
+  res.json(tripUpdate.villeRetour)
+})
+
 // ROUTE ADD ETAPES //
 router.post('/addetape', async function (req, res, next) {
   var trip = await voyageModel.findOne({
