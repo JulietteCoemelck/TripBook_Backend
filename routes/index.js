@@ -101,10 +101,8 @@ router.post ('/sign-in', async function(req, res, next) {
 
 // ROUTE HOMESREEN //
 router.post('/home', async function (req, res, next) {
-  var result = false;
-  var resultvoyage = false;
   var user = await userModel.findOne({
-    token: req.body.token
+    token: req.query.token
   })
 
   if(user){
