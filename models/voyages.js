@@ -35,7 +35,7 @@ var voyageursSchema = mongoose.Schema({
 var voyageSchema = mongoose.Schema({
     tripName : String,
     villeDepart : String,
-    villeArrivee : String,
+    villeRetour : String,
     dateDepart : String,
     dateRetour : String,
     organisateurs : [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
