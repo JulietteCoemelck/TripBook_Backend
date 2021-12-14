@@ -6,6 +6,7 @@ var uid2 = require('uid2');
 
 var userModel = require('../models/users');
 const voyageModel = require('../models/voyages');
+var villeModel = require('../models/villes')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
