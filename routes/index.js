@@ -251,7 +251,7 @@ router.post('/addactivity', async function (req, res, next) {
   trip.activities.push({name: req.body.activityName, creator: user._id, date: req.body.date, heure: req.body.heure})
   var tripSaved = await trip.save();
 
-  res.json({tripActivities: trip.activities})
+  res.json({trip: trip})
 })
 
 // ROUTE API VILLES //
