@@ -150,7 +150,7 @@ router.post('/newtrip', async function (req, res, next) {
 
   // Pour mettre à jour le reducer avec tous les voyages du user //
   var allTrips = await voyageModel.find({
-    organisateurs: [user._i]
+    organisateurs: [user._id]
   })
 
   res.json({resultnewTrip: resultnewTrip, resultUser: resultUser, tripId: tripSaved._id, allTrips: allTrips})
