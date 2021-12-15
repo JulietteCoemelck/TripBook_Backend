@@ -8,10 +8,9 @@ var etapesSchema = mongoose.Schema({
 // SOUS DOCUMENT ACTIVITES //
 var activitySchema = mongoose.Schema({
     name: String,
-    desc: String,
     creator: String,
-    date: Date,
-    ville: String,
+    date: String,
+    heure: String,
     votesPour : [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
     votesContre : [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}]
 })
@@ -40,7 +39,7 @@ var voyageSchema = mongoose.Schema({
     dateRetour : String,
     organisateurs : [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
     etapes: [etapesSchema],
-    activies: [activitySchema],
+    activities: [activitySchema],
     checklist : [checklistSchema],
     voyageurs : [voyageursSchema]
 

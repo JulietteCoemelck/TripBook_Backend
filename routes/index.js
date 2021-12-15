@@ -232,6 +232,21 @@ router.post('/deleteetape', async function (req,res,next) {
   res.json({trip : trip})
 })
 
+// ROUTE ADD ACTIVITY //
+router.post('/addactivity', async function (req, res, next) {
+  var trip = await voyageModel.findOne({
+    _id: req.body.voyageID
+  })
+
+  var user = await userModel.findOne({
+    token: req.body.token
+  })
+
+  trip.activities.push({name: req.body.activityName, creator: user._id, date: req.body.date, heure: req.body.heure})
+  var tripSaved = await trip.save();
+
+  res.json({tripActivities: tripSaved.activities})
+})
 
 // ROUTE API VILLES //
 
