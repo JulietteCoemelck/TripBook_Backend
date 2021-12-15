@@ -148,7 +148,12 @@ router.post('/newtrip', async function (req, res, next) {
     resultnewTrip = true
   }
 
-  res.json({resultnewTrip: resultnewTrip, resultUser: resultUser, tripId: tripSaved._id})
+  // Pour mettre à jour le reducer avec tous les voyages du user //
+  var allTrips = await voyageModel.find({
+    organisateurs: [user._i]
+  })
+
+  res.json({resultnewTrip: resultnewTrip, resultUser: resultUser, tripId: tripSaved._id, allTrips: allTrips})
 })
 
 
@@ -176,6 +181,7 @@ router.post('/itinerary', async function (req, res, next) {
   var trip = await voyageModel.findOne({
     _id: req.body.voyageId
   })
+
 
 
   res.json({trip})
