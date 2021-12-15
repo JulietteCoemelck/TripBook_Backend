@@ -148,7 +148,7 @@ router.post('/newtrip', async function (req, res, next) {
     resultnewTrip = true
   }
 
-  res.json({resultnewTrip: resultnewTrip, resultUser: resultUser, tripId: tripSaved._id, trip: tripSaved})
+  res.json({resultnewTrip: resultnewTrip, resultUser: resultUser, tripId: tripSaved._id})
 })
 
 
