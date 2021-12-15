@@ -8,7 +8,7 @@ var etapesSchema = mongoose.Schema({
 // SOUS DOCUMENT ACTIVITES //
 var activitySchema = mongoose.Schema({
     name: String,
-    creator: String,
+    creator: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
     date: String,
     heure: String,
     votesPour : [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
