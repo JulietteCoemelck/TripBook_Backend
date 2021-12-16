@@ -397,27 +397,30 @@ router.post('/marqueurs', async function(req, res, next) {
   
   //récupération étapes
   var listeVilles = trip.etapes
-  console.log(listeVilles)
+      console.log("LISTE VILLES //////////////", listeVilles)
+      console.log("iiiiiiiii",listeVilles.length )
 
   var villesToMarked = []
-  for (i=0; i<listeVilles; i++) {
+  for (i=0; i<listeVilles.length; i++) {
     var data = await request('POST', `https://api.openweathermap.org/data/2.5/weather?q=${listeVilles[i].ville}&lang=fr&appid=e265a8c2c641174271693732b4d1faec`);
     var dataAPI = JSON.parse(data.body);
-    console.log("DATADATDATADTAD API",dataAPI)
+     console.log("DATADATDATADTAD API",dataAPI)
 
     var latitudeAPI = dataAPI.coord.lat
     var longitudeAPI = dataAPI.coord.lon
     var nomVille = listeVilles[i].ville
-    villesToMarked.push({nomVille, latitudeAPI, longitudeAPI})
+    var dureeVille= listeVilles[i].duree
+
+    villesToMarked.push({nomVille, latitudeAPI, longitudeAPI, dureeVille})
   }
 
-  
+  console.log("MARKED API",villesToMarked)  
 
   //récupération des durées
-  var tableauDureeEtapes = []
-  for (i=0; i<listeVilles.length; i++) {
-    tableauDureeEtapes.push(listeVilles[i].duree)
-  }
+      // var tableauDureeEtapes = []
+      // for (i=0; i<listeVilles.length; i++) {
+      //   tableauDureeEtapes.push(listeVilles[i].duree)
+      // }
       //console.log('durees')
       //console.log(tableauDureeEtapes)
   
@@ -448,7 +451,7 @@ router.post('/marqueurs', async function(req, res, next) {
   }
 
 
-  res.json ({tableauVilleDetA : tableauCoord, tableauDureeEtapes : tableauDureeEtapes, villesToMarked : villesToMarked})
+  res.json ({tableauVilleDetA : tableauCoord, villesToMarked : villesToMarked})
 })
 
 module.exports = router;
