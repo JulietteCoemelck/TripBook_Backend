@@ -9,6 +9,8 @@ var uid2 = require('uid2');
 var userModel = require('../models/users');
 const voyageModel = require('../models/voyages');
 var villeModel = require('../models/villes')
+const messageModel = require('../models/messages');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -176,7 +178,37 @@ router.post('/deletetrip', async function (req, res, next) {
 
   res.json({trip: trip, voyages: voyages})
 })
+ 
+// ROUTE TCHAT //
 
+router.post('/addMessage', async function (req, res, next) {
+  var resultnewMessage = false;
+  var resultUser = false;
+
+  var user = await userModel.findOne({
+    token: req.body.token
+  })
+
+  if (user){
+    resultUser = true
+  }
+
+  var newMessage = new messageModel({
+    message: req.body.messagefromFront,
+    auteur: [user._id],
+    date: req.body.dateFromFront,
+    voyages: [voyages._id],
+    
+
+  })
+  var MessageSaved = await newMessage.save();
+
+  if(MessageSaved){
+    resultnewMessage = true
+  }
+
+  res.json({resultnewMessage: resultnewMessage, resultUser: resultUser})
+})
 
 // ROUTE ITINERARY //
 router.post('/itinerary', async function (req, res, next) {
