@@ -215,6 +215,7 @@ router.post('/itinerary', async function (req, res, next) {
   var trip = await voyageModel.findOne({
     _id: req.body.voyageId
   })
+  console.log(trip)
   // renvoyer la liste des villes géographiques du voyage dans le front //
   var listeVilles = trip.etapes
   console.log(listeVilles)
