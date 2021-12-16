@@ -280,7 +280,7 @@ router.post('/addvilleretour', async function (req, res, next) {
   var trip = await voyageModel.findOne({
     _id: req.body.voyageId
   })
-  var tripUpdate = await voyageModel.update({
+  var tripUpdate = await voyageModel.updateOne({
     _id: trip._id
   }, {
     villeRetour: req.body.villeRetourFromFront
