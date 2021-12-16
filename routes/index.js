@@ -294,7 +294,7 @@ router.post('/deleteetape', async function (req,res,next) {
     _id: req.body.voyageID
   })
 
-  res.json({allTrips: allTrips})
+  res.json({allEtapes: allTrips.etapes})
 })
 
 // ROUTE GET ACTIVITIES //
