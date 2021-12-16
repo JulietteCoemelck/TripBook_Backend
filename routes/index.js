@@ -290,7 +290,11 @@ router.post('/deleteetape', async function (req,res,next) {
     $pull: {etapes: {_id: req.body.etapeIDFromFront}}
   })
 
-  res.json({trip : trip})
+  var allTrips = await voyageModel.find({
+    _id: req.body.voyageID
+  })
+
+  res.json({allTrips: allTrips})
 })
 
 // ROUTE GET ACTIVITIES //
