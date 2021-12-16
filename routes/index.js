@@ -231,9 +231,30 @@ router.post('/itinerary', async function (req, res, next) {
     }
   }
 
+  // renvoyer les villes (géographiques) de départ et de retour dans le front //
+  //récupération ville de départ
+  var cityDeparture = trip.villeDepart
+  var cityDDate = trip.dateDepart
+  //récupération ville de retour
+  var cityArrival = trip.villeRetour
+  var cityADate = trip.dateRetour
+  
+  var tableauDate = [cityDDate, cityADate]
+  var tableauVilles = [cityDeparture, cityArrival]
+  var tableauCoord = []
 
+  for (i=0; i<tableauVilles.length; i++) {
+    var data = await request('POST', `https://api.openweathermap.org/data/2.5/weather?q=${tableauVilles[i]}&lang=fr&appid=e265a8c2c641174271693732b4d1faec`);
+    var dataAPI = JSON.parse(data.body);
 
-  res.json({trip, villesMarked})
+    var latitudeAPI = dataAPI.coord.lat
+    var longitudeAPI = dataAPI.coord.lon
+    var nom = tableauVilles[i]
+    var cityDate = tableauDate[i]
+    tableauCoord.push({nom, latitudeAPI, longitudeAPI, cityDate})
+  }
+
+  res.json({trip, villesMarked, tableauCoord})
 })
 
 // ROUTE ADD VILLE DEPART //
