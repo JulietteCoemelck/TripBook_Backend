@@ -278,8 +278,24 @@ router.post('/addetape', async function (req, res, next) {
   console.log(trip.etapes)
   
   var tripSaved = await trip.save(); 
+
+  // renvoyer la liste des villes géographiques du voyage dans le front //
+  var listeVilles = trip.etapes
+  console.log(listeVilles)
+
+  var villesMarked = []
+  for (i = 0; i<listeVilles.length; i++){
+    var marked = await villeModel.findOne({
+      name : listeVilles[i].ville
+    })
+    if (marked == null) {
+      console.log('no city found')
+    } else {
+      villesMarked.push(marked)
+    }
+  }
   
-  res.json({tripEtapes : tripSaved.etapes})
+  res.json({tripEtapes : tripSaved.etapes, villesMarked: villesMarked})
 })
 
 // ROUTE DELETE ETAPE //
