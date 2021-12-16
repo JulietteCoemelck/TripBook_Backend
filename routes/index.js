@@ -9,6 +9,8 @@ var uid2 = require('uid2');
 var userModel = require('../models/users');
 const voyageModel = require('../models/voyages');
 var villeModel = require('../models/villes')
+const messageModel = require('../models/messages');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -176,17 +178,83 @@ router.post('/deletetrip', async function (req, res, next) {
 
   res.json({trip: trip, voyages: voyages})
 })
+ 
+// ROUTE TCHAT //
 
+router.post('/addMessage', async function (req, res, next) {
+  var resultnewMessage = false;
+  var resultUser = false;
+
+  var user = await userModel.findOne({
+    token: req.body.token
+  })
+
+  if (user){
+    resultUser = true
+  }
+
+  var newMessage = new messageModel({
+    message: req.body.messagefromFront,
+    auteur: [user._id],
+    date: req.body.dateFromFront,
+    voyages: [voyages._id],
+    
+
+  })
+  var MessageSaved = await newMessage.save();
+
+  if(MessageSaved){
+    resultnewMessage = true
+  }
+
+  res.json({resultnewMessage: resultnewMessage, resultUser: resultUser})
+})
 
 // ROUTE ITINERARY //
 router.post('/itinerary', async function (req, res, next) {
   var trip = await voyageModel.findOne({
     _id: req.body.voyageId
   })
+  // renvoyer la liste des villes géographiques du voyage dans le front //
+  var listeVilles = trip.etapes
+  console.log(listeVilles)
 
+  var villesMarked = []
+  for (i = 0; i<listeVilles.length; i++){
+    var marked = await villeModel.findOne({
+      name : listeVilles[i].ville
+    })
+    if (marked == null) {
+      console.log('no city found')
+    } else {
+      villesMarked.push(marked)
+    }
+  }
 
+  // renvoyer les villes (géographiques) de départ et de retour dans le front //
+  //récupération ville de départ
+  var cityDeparture = trip.villeDepart
+  var cityDDate = trip.dateDepart
+  //récupération ville de retour
+  var cityArrival = trip.villeRetour
+  var cityADate = trip.dateRetour
+  
+  var tableauDate = [cityDDate, cityADate]
+  var tableauVilles = [cityDeparture, cityArrival]
+  var tableauCoord = []
 
-  res.json({trip})
+  for (i=0; i<tableauVilles.length; i++) {
+    var data = await request('POST', `https://api.openweathermap.org/data/2.5/weather?q=${tableauVilles[i]}&lang=fr&appid=e265a8c2c641174271693732b4d1faec`);
+    var dataAPI = JSON.parse(data.body);
+
+    var latitudeAPI = dataAPI.coord.lat
+    var longitudeAPI = dataAPI.coord.lon
+    var nom = tableauVilles[i]
+    var cityDate = tableauDate[i]
+    tableauCoord.push({nom, latitudeAPI, longitudeAPI, cityDate})
+  }
+
+  res.json({trip, villesMarked, tableauCoord})
 })
 
 // ROUTE ADD VILLE DEPART //
@@ -200,7 +268,11 @@ router.post('/addvilledepart', async function (req, res, next) {
     villeDepart: req.body.villeDepartFromFront
   })
 
-  res.json(tripUpdate.villeDepart)
+  var tripSaved = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+
+  res.json(tripSaved.villeDepart)
 })
 
 // ROUTE ADD VILLE RETOUR //
@@ -214,7 +286,11 @@ router.post('/addvilleretour', async function (req, res, next) {
     villeRetour: req.body.villeRetourFromFront
   })
 
-  res.json(tripUpdate.villeRetour)
+  var tripSaved = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+
+  res.json(tripSaved.villeRetour)
 })
 
 // ROUTE ADD ETAPES //
@@ -246,25 +322,31 @@ router.post('/addetape', async function (req, res, next) {
   console.log(trip.etapes)
   
   var tripSaved = await trip.save(); 
+
+  
   
   res.json({tripEtapes : tripSaved.etapes})
 })
 
 // ROUTE DELETE ETAPE //
 router.post('/deleteetape', async function (req,res,next) {
-  var trip = await voyageModel.update({
+  var trip = await voyageModel.updateOne({
     _id: req.body.voyageID
   },{
     $pull: {etapes: {_id: req.body.etapeIDFromFront}}
   })
 
-  res.json({trip : trip})
+  var allTrips = await voyageModel.findOne({
+    _id: req.body.voyageID
+  })
+
+  res.json({allEtapes: allTrips.etapes})
 })
 
 // ROUTE GET ACTIVITIES //
 router.post('/activities', async function(req, res, next) {
   var trip = await voyageModel.findOne({
-    _id: req.body.voyageId
+    _id: req.body.voyageID
   })
 
   res.json({tripActivities: trip.activities})
