@@ -215,10 +215,25 @@ router.post('/itinerary', async function (req, res, next) {
   var trip = await voyageModel.findOne({
     _id: req.body.voyageId
   })
+  // renvoyer la liste des villes géographiques du voyage dans le front //
+  var listeVilles = trip.etapes
+  console.log(listeVilles)
+
+  var villesMarked = []
+  for (i = 0; i<listeVilles.length; i++){
+    var marked = await villeModel.findOne({
+      name : listeVilles[i].ville
+    })
+    if (marked == null) {
+      console.log('no city found')
+    } else {
+      villesMarked.push(marked)
+    }
+  }
 
 
 
-  res.json({trip})
+  res.json({trip, villesMarked})
 })
 
 // ROUTE ADD VILLE DEPART //
@@ -279,23 +294,9 @@ router.post('/addetape', async function (req, res, next) {
   
   var tripSaved = await trip.save(); 
 
-  // renvoyer la liste des villes géographiques du voyage dans le front //
-  var listeVilles = trip.etapes
-  console.log(listeVilles)
-
-  var villesMarked = []
-  for (i = 0; i<listeVilles.length; i++){
-    var marked = await villeModel.findOne({
-      name : listeVilles[i].ville
-    })
-    if (marked == null) {
-      console.log('no city found')
-    } else {
-      villesMarked.push(marked)
-    }
-  }
   
-  res.json({tripEtapes : tripSaved.etapes, villesMarked: villesMarked})
+  
+  res.json({tripEtapes : tripSaved.etapes})
 })
 
 // ROUTE DELETE ETAPE //
