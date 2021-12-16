@@ -290,7 +290,7 @@ router.post('/deleteetape', async function (req,res,next) {
     $pull: {etapes: {_id: req.body.etapeIDFromFront}}
   })
 
-  var allTrips = await voyageModel.find({
+  var allTrips = await voyageModel.findOne({
     _id: req.body.voyageID
   })
 
