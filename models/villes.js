@@ -2,9 +2,9 @@ var mongoose = require('mongoose')
 
 
 var villeSchema = mongoose.Schema({
-    nom : String,
-    latitude : Number,
-    longitude : Number,
+    name : String,
+    lat : Number,
+    longi : Number,
 });
 
 const villeModel = mongoose.model('villes', villeSchema)

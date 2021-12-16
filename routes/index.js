@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var request = require('sync-request');
+
 var bcrypt = require('bcrypt');
 var uid2 = require('uid2');
 
@@ -186,7 +188,7 @@ router.post('/addvilledepart', async function (req, res, next) {
   var trip = await voyageModel.findOne({
     _id: req.body.voyageId
   })
-  var tripUpdate = await voyageModel.update({
+  var tripUpdate = await voyageModel.updateOne({
     _id: trip._id
   }, {
     villeDepart: req.body.villeDepartFromFront
@@ -215,10 +217,31 @@ router.post('/addetape', async function (req, res, next) {
     _id: req.body.voyageId
   })
 
-trip.etapes.push({ville: req.body.villeEtapeFromFront, duree: req.body.dureeFromFront})
-var tripSaved = await trip.save(); 
+  var potentialCity = await villeModel.findOne({
+    name : req.body.villeEtapeFromFront
+  })
+  if (potentialCity == null) {
+    var data = await request('POST', `https://api.openweathermap.org/data/2.5/weather?q=${req.body.villeEtapeFromFront}&lang=fr&appid=e265a8c2c641174271693732b4d1faec`);
+    var dataAPI = JSON.parse(data.body);
 
-  res.json({tripEtapes: tripSaved.etapes})
+    var latitudeAPI = dataAPI.coord.lat
+    var longitudeAPI = dataAPI.coord.lon
+    var newville = new villeModel({
+       name: req.body.villeEtapeFromFront, 
+       lat: latitudeAPI,
+       longi: longitudeAPI,
+    });
+    var city = await newville.save();
+  } else {
+    console.log('deja la')
+  }
+  
+  trip.etapes.push({ville: req.body.villeEtapeFromFront, duree: req.body.dureeFromFront})
+  console.log(trip.etapes)
+  
+  var tripSaved = await trip.save(); 
+  
+  res.json({tripEtapes : tripSaved.etapes})
 })
 
 // ROUTE DELETE ETAPE //
@@ -234,6 +257,65 @@ router.post('/deleteetape', async function (req,res,next) {
 
 
 // ROUTE API VILLES //
+//voir route addEtape
 
+// MARQUEURS
+router.post('/marqueurs', async function(req, res, next) {
+  var trip = await voyageModel.findOne({
+    _id: req.body.voyageIDFromFront
+  })
+  console.log('chargement effectué')
+  
+  //récupération étapes
+  var listeVilles = trip.etapes
+  console.log(listeVilles)
+
+  var villesMarked = []
+  for (i = 0; i<listeVilles.length; i++){
+    var marked = await villeModel.findOne({
+      name : listeVilles[i].ville
+    })
+    if (marked == null) {
+      console.log('no city found')
+    } else {
+      villesMarked.push(marked)
+    }
+  }
+  console.log('chargement 2')
+  console.log(villesMarked)
+
+  //récupération des durées
+  var tableauDureeEtapes = []
+  for (i=0; i<listeVilles.length; i++) {
+    tableauDureeEtapes.push(listeVilles[i].duree)
+  }
+      //console.log('durees')
+      //console.log(tableauDureeEtapes)
+  
+  //récupération ville de départ
+  var cityDeparture = trip.villeDepart
+  var cityDDate = trip.dateDepart
+  //récupération ville de retour
+  var cityArrival = trip.villeRetour
+  var cityADate = trip.dateRetour
+  
+  var tableauDate = [cityDDate, cityADate]
+  var tableauVilles = [cityDeparture, cityArrival]
+  var tableauCoord = []
+
+  for (i=0; i<tableauVilles.length; i++) {
+    var data = await request('POST', `https://api.openweathermap.org/data/2.5/weather?q=${tableauVilles[i]}&lang=fr&appid=e265a8c2c641174271693732b4d1faec`);
+    var dataAPI = JSON.parse(data.body);
+
+    var latitudeAPI = dataAPI.coord.lat
+    var longitudeAPI = dataAPI.coord.lon
+    var nom = tableauVilles[i]
+    var cityDate = tableauDate[i]
+    tableauCoord.push({nom, latitudeAPI, longitudeAPI, cityDate})
+  }
+
+
+  res.json ({villesMarked : villesMarked, tableauVilleDetA : tableauCoord, tableauDureeEtapes : tableauDureeEtapes})
+})
 
 module.exports = router;
