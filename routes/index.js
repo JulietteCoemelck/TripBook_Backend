@@ -284,7 +284,7 @@ router.post('/addetape', async function (req, res, next) {
 
 // ROUTE DELETE ETAPE //
 router.post('/deleteetape', async function (req,res,next) {
-  var trip = await voyageModel.update({
+  var trip = await voyageModel.updateOne({
     _id: req.body.voyageID
   },{
     $pull: {etapes: {_id: req.body.etapeIDFromFront}}
