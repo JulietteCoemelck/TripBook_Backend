@@ -241,7 +241,7 @@ router.post('/deleteetape', async function (req,res,next) {
 // ROUTE GET ACTIVITIES //
 router.post('/activities', async function(req, res, next) {
   var trip = await voyageModel.findOne({
-    _id: req.body.voyageId
+    _id: req.body.voyageID
   })
 
   res.json({tripActivities: trip.activities})
