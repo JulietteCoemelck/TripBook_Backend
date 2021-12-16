@@ -254,7 +254,7 @@ router.post('/itinerary', async function (req, res, next) {
     tableauCoord.push({nom, latitudeAPI, longitudeAPI, cityDate})
   }
 
-  res.json({trip, villesMarked, tableauCoord})
+  res.json({trip: trip, villesMarked: villesMarked, tableauCoord: tableauCoord})
 })
 
 // ROUTE ADD VILLE DEPART //
