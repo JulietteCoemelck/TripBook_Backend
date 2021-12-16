@@ -286,7 +286,11 @@ router.post('/addvilleretour', async function (req, res, next) {
     villeRetour: req.body.villeRetourFromFront
   })
 
-  res.json(tripUpdate.villeRetour)
+  var tripSaved = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+
+  res.json(tripSaved.villeRetour)
 })
 
 // ROUTE ADD ETAPES //
