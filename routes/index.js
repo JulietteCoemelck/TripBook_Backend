@@ -268,7 +268,11 @@ router.post('/addvilledepart', async function (req, res, next) {
     villeDepart: req.body.villeDepartFromFront
   })
 
-  res.json(tripUpdate.villeDepart)
+  var tripSaved = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+
+  res.json(tripSaved.villeDepart)
 })
 
 // ROUTE ADD VILLE RETOUR //
