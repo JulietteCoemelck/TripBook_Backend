@@ -18,7 +18,8 @@ var activitySchema = mongoose.Schema({
 var checklistSchema = mongoose.Schema({
     name: String,
     desc: String,
-    pour: [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
+  //  pour: [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
+    assignation: String,
     deadline: Date,
     statut: String
 })

@@ -217,7 +217,7 @@ router.post('/itinerary', async function (req, res, next) {
   })
   // renvoyer la liste des villes géographiques du voyage dans le front //
   var listeVilles = trip.etapes
-  console.log(listeVilles)
+ // console.log(listeVilles)
 
   var villesMarked = []
   for (i = 0; i<listeVilles.length; i++){
@@ -225,7 +225,7 @@ router.post('/itinerary', async function (req, res, next) {
       name : listeVilles[i].ville
     })
     if (marked == null) {
-      console.log('no city found')
+    //  console.log('no city found')
     } else {
       villesMarked.push(marked)
     }
@@ -315,11 +315,11 @@ router.post('/addetape', async function (req, res, next) {
     });
     var city = await newville.save();
   } else {
-    console.log('deja la')
+  //  console.log('deja la')
   }
   
   trip.etapes.push({ville: req.body.villeEtapeFromFront, duree: req.body.dureeFromFront})
-  console.log(trip.etapes)
+ // console.log(trip.etapes)
   
   var tripSaved = await trip.save(); 
 
@@ -376,11 +376,11 @@ router.post('/marqueurs', async function(req, res, next) {
   var trip = await voyageModel.findOne({
     _id: req.body.voyageIDFromFront
   })
-  console.log('chargement effectué')
+ // console.log('chargement effectué')
   
   //récupération étapes
   var listeVilles = trip.etapes
-  console.log(listeVilles)
+ // console.log(listeVilles)
 
   var villesMarked = []
   for (i = 0; i<listeVilles.length; i++){
@@ -388,13 +388,13 @@ router.post('/marqueurs', async function(req, res, next) {
       name : listeVilles[i].ville
     })
     if (marked == null) {
-      console.log('no city found')
+    //  console.log('no city found')
     } else {
       villesMarked.push(marked)
     }
   }
-  console.log('chargement 2')
-  console.log(villesMarked)
+ // console.log('chargement 2')
+  //console.log(villesMarked)
 
   //récupération des durées
   var tableauDureeEtapes = []
@@ -428,6 +428,73 @@ router.post('/marqueurs', async function(req, res, next) {
 
 
   res.json ({villesMarked : villesMarked, tableauVilleDetA : tableauCoord, tableauDureeEtapes : tableauDureeEtapes})
+})
+
+//ROUTE CHECKLIST
+
+//ENREGISTRE NOS TACHES EN BDD
+
+router.post('/checklist', async function (req, res, next) {
+  var trip = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+
+trip.checklist.push({
+ name: req.body.nameFromFront,
+ desc: req.body.descFromFront,
+ assignation: req.body.assignationFromFront,
+ deadline: req.body.deadlineFromFront,
+ statut: req.body.statutFromFront,
+})
+var tripSaved = await trip.save(); 
+console.log(tripSaved)
+res.json({tripchecklist: tripSaved.checklist})
+})
+
+// lire les tâches
+
+router.get('/tasks', async function(req, res, next) {
+ 
+  var trip = await voyageModel.findOne({
+    _id: req.query.voyageId
+  }) 
+ // console.log(trip)
+ //recuper les tâches 
+ var tasks= trip.checklist;
+
+ res.json({tasks:trip.checklist })
+})
+
+
+
+//Eliminer tâches
+router.post('/deleteTask', async function (req,res,next) {
+  var trip = await voyageModel.findOne({
+    _id: req.body.voyageId
+  })
+
+  res.json({tasks:trip.checklist, taskId: tasks._id})
+})
+
+
+
+//Update tâches
+router.put('/updateTask', async function (req,res,next) {
+  var trip = await voyageModel.updateOne({
+    _id: req.body.voyageId
+  },{
+    $set: {checklist: {name: req.body.nameFromFront,
+      desc: req.body.descFromFront,
+      assignation: req.body.assignationFromFront,
+      deadline: req.body.deadlineFromFront,
+      statut: req.body.statutFromFront}}
+  },
+  {"arrayFilters":{_id:trip.checklist.id}
+
+  })
+
+
+  res.json({result: 'task delete'})
 })
 
 module.exports = router;
